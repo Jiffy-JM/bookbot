@@ -1,40 +1,40 @@
-# Main function that will read a text file and print the text.
+from stats import (
+    get_num_words,
+    chars_dict_to_sorted_list,
+    get_chars_dict,
+)
+import sys
+
+if len(sys.argv) != 2:
+    print("Usage: python3 main.py <path_to_book>")
+    sys.exit(1)
+
 def main():
-    # This will open a file from a specified path
-    with open("books/frankenstein.txt") as f:
-        # Reads contents from the file and sets it in a variable file_contents
-        file_contents = f.read()
-        return file_contents
+    book_path = sys.argv[1]
+    text = get_book_text(book_path)
+    num_words = get_num_words(text)
+    chars_dict = get_chars_dict(text)
+    chars_sorted_list = chars_dict_to_sorted_list(chars_dict)
+    print_report(book_path, num_words, chars_sorted_list)
 
-# word_count variable stores the length of the string input removing the whitespace using the split() string method.
-def word_count(data):
-    word_count = len(data.split())
-    return f"{word_count} words found in the document"
 
-character = {}
-dedupe = set()
+def get_book_text(path):
+    with open(path) as f:
+        return f.read()
 
-def count_characters(data):
 
-    for d in data.lower():
-        dedupe.add(d)
-    for c in dedupe:
-        character[c] = 0
-    for d in data.lower():
-        if d in character:
-            character[d] += 1
-    return character
+def print_report(book_path, num_words, chars_sorted_list):
+    print("============ BOOKBOT ============")
+    print(f"Analyzing book found at {book_path}...")
+    print("----------- Word Count ----------")
+    print(f"Found {num_words} total words")
+    print("--------- Character Count -------")
+    for item in chars_sorted_list:
+        if not item["char"].isalpha():
+            continue
+        print(f"{item['char']}: {item['num']}")
 
-def word_aggragate():
-    count_characters(main())
+    print("============= END ===============")
 
-    print("--- Begin report of books/frankenstein.txt ---")
-    print(word_count(main()))
 
-    for c in character:
-        print(f"The {c} character was found {character[c]} times")
-
-    print("--- End report ---")
-
-word_aggragate()
-    
+main()
